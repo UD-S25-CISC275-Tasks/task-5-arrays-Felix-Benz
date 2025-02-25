@@ -88,9 +88,7 @@ export function makeMath(addends: number[]): string {
     if (addends.length == 0) {
         return "0=0";
     }
-    let total: number = addends
-        .map((addend) => addend)
-        .reduce((acc, val) => acc + val, 0);
+    let total: number = addends.reduce((acc, val) => acc + val, 0);
     return total + "=" + addends.join("+");
 }
 
@@ -104,5 +102,15 @@ export function makeMath(addends: number[]): string {
  * And the array [1, 9, 7] would become [1, 9, 7, 17]
  */
 export function injectPositive(values: number[]): number[] {
-    return [];
+    let negativeIndex: number = values.findIndex((num) => num < 0);
+    if (negativeIndex != -1) {
+        let positives: number[] = values.slice(0, negativeIndex);
+        let posTotal: number = positives.reduce((acc, val) => acc + val, 0);
+        let injected: number[] = [...values];
+        injected.splice(positives.length + 1, 0, posTotal);
+        return injected;
+    } else {
+        let valuesTotal: number = values.reduce((acc, val) => acc + val, 0);
+        return [...values, valuesTotal];
+    }
 }
